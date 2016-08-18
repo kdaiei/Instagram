@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ImageSelectViewController.swift
 //  Instagram
 //
 //  Created by kobayashi on 2016/08/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ImageSelectViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
