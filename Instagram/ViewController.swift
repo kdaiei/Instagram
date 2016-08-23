@@ -36,12 +36,8 @@ class ViewController: UIViewController {
             setupTab()
             
             let ud = NSUserDefaults.standardUserDefaults()
-            //g_userName = ud.objectForKey(CommonConst.DisplayNameKey) as! String
-//            if let name = (ud.objectForKey(CommonConst.DisplayNameKey) as! String) {
-//                g_userName = name
-//            } else {
-//                g_userName = ""
-//            }
+            g_userName = ud.objectForKey(CommonConst.DisplayNameKey) as! String
+
         } else {
             // ログインしていない時の処理
             dispatch_async(dispatch_get_main_queue()) {
@@ -54,7 +50,7 @@ class ViewController: UIViewController {
 
     // 
     func setupTab() {
-        print("settab kita!")
+        //print("settab kita!")
         // 画像のファイル名を指定してESTabBarControllerを作成する
         let tabBarController = ESTabBarController(tabIconNames: ["home", "camera", "setting"])
         
@@ -84,7 +80,7 @@ class ViewController: UIViewController {
             self.presentViewController(imageViewController!, animated: true, completion: nil)
         }, atIndex: 1)
         
-        //
+        // Homeタブを選択する
         tabBarController!.setSelectedIndex(0, animated: true)
 
     }

@@ -16,43 +16,57 @@ var g_currentID:NSIndexPath!
 var g_postArray: [PostData] = []
 var g_userName:String = ""
 var g_tableViewScrollBefore:CGFloat = 0
-var g_viewDidLoadCnt = 0
+var g_viewDidLoadFlag = true
 
-class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,UIGestureRecognizerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
-        if 0 == g_viewDidLoadCnt {
-            g_viewDidLoadCnt += 1
-            return
-        }
-        
-        print("viewDidLoad kita!")
         super.viewDidLoad()
-        
-        
         tableView.delegate = self
         tableView.dataSource = self
-        
         let nib = UINib(nibName: "PostTableViewCell", bundle: nil)
         tableView.registerNib(nib, forCellReuseIdentifier: "Cell")
-        
+        //tableView.rowHeight = 500.0
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.rowHeight = 500.0
+        tableView.contentOffset.y = g_tableViewScrollBefore
         
+        // 初回はTableViewを再表示せずに終了する。
+        if g_viewDidLoadFlag {
+            g_viewDidLoadFlag = false
+            return
+        }
+
+        // print("viewDidLoad kita!")
         // 要素が追加されたらpostArrayに追加してTableViewを再表示する
         FIRDatabase.database().reference().child(CommonConst.PostPATH).observeEventType(.ChildAdded, withBlock: { snapshot in
-            print("A kita!")
+            //print("A kita!")
+            
             // PostDataクラスを生成して受け取ったデータを設定する
             if let uid = FIRAuth.auth()?.currentUser?.uid {
                 let postData = PostData(snapshot: snapshot, myId: uid)
-                g_postArray.insert(postData, atIndex: 0)
                 
                 
-                // TableViewを前回表示したスクロール位置に表示する
-                self.tableView.contentOffset.y = g_tableViewScrollBefore
+                // 保持している配列からidが同じものを探す
+                var index: Int = 0
+                var consistent = false
+                for post in g_postArray {
+                    if post.id == postData.id {
+                        consistent = true
+                        index = g_postArray.indexOf(post)!
+                        break
+                    }
+                }
+                
+                if 0 != g_postArray.count && consistent {
+                    // 差し替えるため一度削除する
+                    g_postArray.removeAtIndex(index)
+                }
+                // 削除したところに更新済みのでデータを追加する
+                g_postArray.insert(postData, atIndex: index)
+
+                
                 // TableViewを再表示する
                 self.tableView.reloadData()
             }
@@ -60,7 +74,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してTableViewを再表示する
         FIRDatabase.database().reference().child(CommonConst.PostPATH).observeEventType(.ChildChanged, withBlock: { snapshot in
-            print("B kita!")
+            //print("B kita!")
             if let uid = FIRAuth.auth()?.currentUser?.uid {
                 // PostDataクラスを生成して受け取ったデータを設定する
                 let postData = PostData(snapshot: snapshot, myId: uid)
@@ -85,31 +99,49 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         })
         
+        // TableViewを前回表示したスクロール位置に表示する
+        self.tableView.contentOffset.y = g_tableViewScrollBefore
+        
     }
     
+    
+    // セル数を返す
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return g_postArray.count
     }
     
+    
+    // セルを設定する
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         // セルを取得してデータを設定する
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! PostTableViewCell
         cell.setPostData(g_postArray[indexPath.row])
         
-        // セル内のボタンのアクションをソースコードで設定する
+        // ライクボタンタップした時のイベントを追加
         cell.likeButton.addTarget(self, action:#selector(handleButton(_:event:)), forControlEvents:  UIControlEvents.TouchUpInside)
         
-        // セル内のボタンのアクションをソースコードで設定する
+        // コメントボタンをタップするとコメント投稿画面に遷移するイベント追加
         cell.commentButton.addTarget(self, action: #selector(handleCommentButton(_:event:)), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        // コメントをタップするとコメント投稿画面に遷移する
+        // シングルタップ
+        let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(HomeViewController.tapped(_:)))
+        
+        // デリゲートをセット
+        tapGesture.delegate = self;
+        cell.commentLabel.addGestureRecognizer(tapGesture)
+        
         
         return cell
     }
+    
     
     func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         // Auto Layoutを使ってセルの高さを動的に変更する
         return UITableViewAutomaticDimension
     }
+    
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // セルをタップされたら何もせずに選択状態を解除する
@@ -126,10 +158,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let indexPath = tableView.indexPathForRowAtPoint(point)
         
         setData(indexPath!)
-        
     }
     
     
+    // ライクの変更内容をFirebaseに保存する
     func setData(indexPath:NSIndexPath) {
         // 配列からタップされたインデックスのデータを取り出す
         let postData = g_postArray[indexPath.row]
@@ -165,9 +197,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    
+    // コメントボタンをタップ時にコメント投稿画面に遷移する
     func handleCommentButton(sender: UIButton, event:UIEvent) {
         // tableViewのスクロール位置をセットする
+        print(self.tableView.contentOffset.y)
         g_tableViewScrollBefore = self.tableView.contentOffset.y
         
         // タップされたセルのインデックスを求める
@@ -178,4 +211,19 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let commentViewController = storyboard!.instantiateViewControllerWithIdentifier("Comment")
         presentViewController(commentViewController, animated: true, completion: nil)
     }
+    
+    // コメントをタップ時にコメント投稿画面に遷移する
+    func tapped(sender: UITapGestureRecognizer){
+        //print("tapped kita!")
+        // tableViewのスクロール位置をセットする
+        g_tableViewScrollBefore = self.tableView.contentOffset.y
+        
+        // タップされたセルのインデックスを求める
+        let point = sender.locationInView(self.tableView)
+        g_currentID = tableView.indexPathForRowAtPoint(point)
+        
+        let commentViewController = storyboard!.instantiateViewControllerWithIdentifier("Comment")
+        presentViewController(commentViewController, animated: true, completion: nil)
+    }
+    
 }

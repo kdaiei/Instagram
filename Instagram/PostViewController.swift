@@ -44,6 +44,7 @@ class PostViewController: UIViewController {
         UIApplication.sharedApplication().keyWindow?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    
     // キャンセルボタンをタップした時に呼ばれるメソッド
     @IBAction func handleCancelButton(sender: AnyObject) {
         // 画面を閉じる
@@ -58,12 +59,9 @@ class PostViewController: UIViewController {
         imageView.image = image
     }
 
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-
-
 }

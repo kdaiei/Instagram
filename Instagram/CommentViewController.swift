@@ -47,6 +47,8 @@ class commentViewController: UIViewController, UITextViewDelegate, UITableViewDa
                 commentField.text = ""
             }
         }
+        print("g_postArray.count = \(g_postArray.count)")
+        
     }
     
     
@@ -59,7 +61,8 @@ class commentViewController: UIViewController, UITextViewDelegate, UITableViewDa
             }
         }
         
-        // 要素が変更されたら該当のデータをpostArrayから一度削除した後に新しいデータを追加してTableViewを再表示する
+        
+        // 要素が変更されたら該当のデータをcommentArrayから一度削除した後に新しいデータを追加してcommentTableViewを再表示する
         FIRDatabase.database().reference().child(CommonConst.PostPATH).observeEventType(.ChildChanged, withBlock: { snapshot in
             if let uid = FIRAuth.auth()?.currentUser?.uid {
                 // PostDataクラスを生成して受け取ったデータを設定する
@@ -90,8 +93,8 @@ class commentViewController: UIViewController, UITextViewDelegate, UITableViewDa
                 // commentTableViewの現在表示されているセルを更新する
                 self.commentTableView.reloadData()
             }
+            
         })
-        
         
         
         // キーボードが開かれたことを検出するイベントを設定
@@ -102,7 +105,6 @@ class commentViewController: UIViewController, UITextViewDelegate, UITableViewDa
          // 始めからキーボードを開く
         commentField.becomeFirstResponder()
         
-        //
         commentField.delegate = self;
         
         commentTableView.delegate = self
@@ -112,19 +114,21 @@ class commentViewController: UIViewController, UITextViewDelegate, UITableViewDa
         commentTableView.registerNib(nib, forCellReuseIdentifier: "commentCell")
         commentTableView.estimatedRowHeight = 70.0
         commentTableView.rowHeight = UITableViewAutomaticDimension
-        
 
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    
     // テーブルの数を返す
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return commentArray.count
     }
+    
     
     // テーブルのセルをセットする
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -136,7 +140,7 @@ class commentViewController: UIViewController, UITextViewDelegate, UITableViewDa
                 cell.setComentData(aArray[1], comment: aArray[2])
             }
         }
-        
+    
         return cell
     }
     
@@ -176,6 +180,7 @@ class commentViewController: UIViewController, UITextViewDelegate, UITableViewDa
         }
     }
     
+    // コメントの更新をデータベースに保存する
     func setCommentData(indexPath:NSIndexPath, comment:String) {
         // 配列からタップされたインデックスのデータを取り出す
         let postData = g_postArray[indexPath.row]

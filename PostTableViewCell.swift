@@ -19,17 +19,6 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var commentButton: UIButton!
     
-//    @IBAction func commentButton(sender: UIButton) {
-//        //let viewController = UIViewController()
-//        //let storyboard = UIStoryboard()
-//        let commentViewController = aViewController.storyboard!.instantiateViewControllerWithIdentifier("Comment")
-//        aViewController.presentViewController(commentViewController, animated: true, completion: nil)
-//    }
-
-    
-
-    
-
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -40,7 +29,7 @@ class PostTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
     }
-    
+
     
     func setPostData(postData: PostData) {
         postImageView.image = postData.image
@@ -63,13 +52,37 @@ class PostTableViewCell: UITableViewCell {
             likeButton.setImage(buttonImage, forState: UIControlState.Normal)
         }
         
-        if postData.comment != nil {
-            var resultArrya:[AnyObject] = []
+        if postData.comment != nil && 0 < postData.comment?.count {
+            //print("comment cell kita!")
+            var cnt = 0
+            let attributedString = NSMutableAttributedString()
             for ele in postData.comment! {
+                // タイムラインのコメントは３件まで表示する
+                // それ以降が見たいときはコメントをタップしてコメント画面で確認する。
+                if 2 < cnt {
+                    break
+                }
+                cnt += 1
+                
+                // 表示用のコメントを組み立てる
                 if let itemArray:[String] = ele.componentsSeparatedByString("<,>") {
-                    resultArrya.append(itemArray)
+                    var newLine = ""
+                    if 0 < attributedString.length {
+                        newLine = "\n"
+                    }
+                    let normalText = NSMutableAttributedString(string: itemArray[2] + "\n")
+                    let boldText = newLine + itemArray[1] + ": "
+                    
+                    let attrs = [NSFontAttributeName : UIFont.boldSystemFontOfSize(13)]
+                    let boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
+                    
+                    attributedString.appendAttributedString(boldString)
+                    attributedString.appendAttributedString(normalText)
                 }
             }
+            commentLabel.attributedText = attributedString
+        } else {
+            commentLabel.text = "なし"
         }
     }
     

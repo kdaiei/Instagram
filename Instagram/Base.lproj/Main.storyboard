@@ -60,8 +60,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dw3-yD-2Ua">
-                                <rect key="frame" x="150" y="220" width="300" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dw3-yD-2Ua">
+                                <rect key="frame" x="150" y="220" width="300" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="EGu-tk-e9S"/>
                                 </constraints>
@@ -70,8 +70,8 @@
                                     <action selector="handleLoginButton:" destination="gkH-8d-Tk8" eventType="touchUpInside" id="KAh-uT-xkg"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="it6-0c-dhw">
-                                <rect key="frame" x="150" y="260" width="300" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="it6-0c-dhw">
+                                <rect key="frame" x="150" y="270" width="300" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="U8X-ih-lds"/>
                                 </constraints>
@@ -130,13 +130,13 @@
                                             <action selector="sendMessageButton:" destination="dzY-le-yCf" eventType="touchUpInside" id="A8P-go-CQb"/>
                                         </connections>
                                     </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="aUJ-tl-1VM">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aUJ-tl-1VM">
                                         <rect key="frame" x="20" y="15" width="490" height="30"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="uvG-FB-gKp"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                 </subviews>
@@ -185,19 +185,27 @@
                                 <rect key="frame" x="0.0" y="20" width="600" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9YY-HJ-9O6">
-                                        <rect key="frame" x="30" y="0.0" width="34" height="40"/>
+                                        <rect key="frame" x="25" y="0.0" width="34" height="40"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="戻る"/>
                                         <connections>
                                             <action selector="backHomeButton:" destination="dzY-le-yCf" eventType="touchUpInside" id="Ei3-Qh-Dh6"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="コメント" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKA-ma-9LU">
+                                        <rect key="frame" x="266" y="10" width="68" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.94894059630000005" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="9YY-HJ-9O6" firstAttribute="centerY" secondItem="1am-PJ-BrF" secondAttribute="centerY" id="89p-sz-PGX"/>
+                                    <constraint firstItem="hKA-ma-9LU" firstAttribute="centerY" secondItem="1am-PJ-BrF" secondAttribute="centerY" id="ATt-Rq-tNE"/>
                                     <constraint firstItem="9YY-HJ-9O6" firstAttribute="top" secondItem="1am-PJ-BrF" secondAttribute="top" id="gyx-qq-Juz"/>
-                                    <constraint firstItem="9YY-HJ-9O6" firstAttribute="leading" secondItem="1am-PJ-BrF" secondAttribute="leading" constant="30" id="jH3-96-e0R"/>
+                                    <constraint firstItem="9YY-HJ-9O6" firstAttribute="leading" secondItem="1am-PJ-BrF" secondAttribute="leading" constant="25" id="jH3-96-e0R"/>
+                                    <constraint firstItem="hKA-ma-9LU" firstAttribute="centerX" secondItem="1am-PJ-BrF" secondAttribute="centerX" id="tmD-7p-Qp3"/>
                                     <constraint firstAttribute="height" constant="40" id="xFG-BP-4Qn"/>
                                 </constraints>
                             </view>
@@ -353,8 +361,8 @@
                                     <constraint firstAttribute="height" constant="120" id="pf3-EL-79R"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4IG-bE-Q1h">
-                                <rect key="frame" x="151" y="230" width="300" height="40"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4IG-bE-Q1h">
+                                <rect key="frame" x="150" y="230" width="300" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="OHj-us-0gM"/>
                                 </constraints>
