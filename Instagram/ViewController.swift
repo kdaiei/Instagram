@@ -10,14 +10,14 @@ import UIKit
 import ESTabBarController
 import Firebase
 import FirebaseAuth
+import SVProgressHUD
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
-
+        setupTab()
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,10 +28,20 @@ class ViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+
+        
         // currentUserがnilならログインしてない
         if FIRAuth.auth()?.currentUser != nil {
             // ログインしている時の処理
             setupTab()
+            
+            let ud = NSUserDefaults.standardUserDefaults()
+            //g_userName = ud.objectForKey(CommonConst.DisplayNameKey) as! String
+//            if let name = (ud.objectForKey(CommonConst.DisplayNameKey) as! String) {
+//                g_userName = name
+//            } else {
+//                g_userName = ""
+//            }
         } else {
             // ログインしていない時の処理
             dispatch_async(dispatch_get_main_queue()) {
@@ -44,6 +54,7 @@ class ViewController: UIViewController {
 
     // 
     func setupTab() {
+        print("settab kita!")
         // 画像のファイル名を指定してESTabBarControllerを作成する
         let tabBarController = ESTabBarController(tabIconNames: ["home", "camera", "setting"])
         
@@ -72,6 +83,10 @@ class ViewController: UIViewController {
             let imageViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ImageSelect")
             self.presentViewController(imageViewController!, animated: true, completion: nil)
         }, atIndex: 1)
+        
+        //
+        tabBarController!.setSelectedIndex(0, animated: true)
+
     }
 
 }

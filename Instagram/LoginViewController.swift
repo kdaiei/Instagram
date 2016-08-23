@@ -116,6 +116,8 @@ class LoginViewController: UIViewController {
         let ud = NSUserDefaults.standardUserDefaults()
         ud.setValue(name, forKey: CommonConst.DisplayNameKey)
         ud.synchronize()
+        
+        g_userName = name // 表示名をグローバル変数に保存する
     }
     
 }
